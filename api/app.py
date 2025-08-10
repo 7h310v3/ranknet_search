@@ -97,7 +97,7 @@ async def startup():
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
+    """Điểm cuối gốc"""
     return {
         "message": "RankNet Search API",
         "endpoints": [
@@ -113,9 +113,9 @@ async def root():
 
 @app.post("/search")
 async def search(request: SearchRequest):
-    """Search endpoint"""
+    """Điểm cuối tìm kiếm"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     results = search_engine.search(request.query, request.top_k)
     
@@ -128,9 +128,9 @@ async def search(request: SearchRequest):
 
 @app.post("/feedback")
 async def feedback(feedback: ClickFeedback):
-    """Log click feedback"""
+    """Ghi nhận phản hồi nhấp chuột"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     search_engine.log_click(
         feedback.query_id,
@@ -139,7 +139,7 @@ async def feedback(feedback: ClickFeedback):
         feedback.dwell_time
     )
     
-    return {"message": "Feedback logged"}
+    return {"message": "Đã ghi nhận phản hồi"}
 
 
 @app.post("/documents")
@@ -161,17 +161,17 @@ async def add_document(doc: DocumentInput):
     
     search_engine.add_document(document)
     
-    return {"doc_id": doc_id, "message": "Document added"}
+    return {"doc_id": doc_id, "message": "Đã thêm tài liệu"}
 
 
 @app.get("/documents/{doc_id}")
 async def get_document(doc_id: str):
-    """Get document by ID"""
+    """Lấy tài liệu theo ID"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     if doc_id not in search_engine.documents:
-        raise HTTPException(status_code=404, detail="Document not found")
+        raise HTTPException(status_code=404, detail="Không tìm thấy tài liệu")
     
     doc = search_engine.documents[doc_id]
     return doc.to_dict()
@@ -179,20 +179,20 @@ async def get_document(doc_id: str):
 
 @app.post("/train")
 async def train(request: TrainingRequest):
-    """Train RankNet model"""
+    """Huấn luyện mô hình RankNet"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     history = search_engine.train(
         epochs=request.epochs,
         batch_size=request.batch_size
     )
     
-    # Save model
+    # Lưu mô hình
     search_engine.save("data/models/")
     
     return {
-        "message": "Training completed",
+        "message": "Huấn luyện hoàn tất",
         "epochs": request.epochs,
         "history": history
     }
