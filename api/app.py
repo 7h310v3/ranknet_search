@@ -200,9 +200,9 @@ async def train(request: TrainingRequest):
 
 @app.get("/evaluate")
 async def evaluate():
-    """Evaluate search engine"""
+    """Đánh giá công cụ tìm kiếm"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     metrics = search_engine.evaluate()
     
@@ -211,9 +211,9 @@ async def evaluate():
 
 @app.get("/stats")
 async def stats():
-    """Get statistics"""
+    """Lấy thống kê"""
     if not search_engine:
-        raise HTTPException(status_code=503, detail="Search engine not initialized")
+        raise HTTPException(status_code=503, detail="Công cụ tìm kiếm chưa được khởi tạo")
     
     return {
         "num_documents": len(search_engine.documents),
@@ -229,7 +229,7 @@ async def stats():
 
 @app.get("/health")
 async def health():
-    """Health check"""
+    """Kiểm tra tình trạng hoạt động"""
     return {"status": "healthy"}
 
 
