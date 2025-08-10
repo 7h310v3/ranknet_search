@@ -1,0 +1,51 @@
+# RankNet Search Configuration
+
+# Data Paths
+data:
+  raw_data: 'data/raw/medium_data.csv'
+  model_dir: 'data/models/'
+  logs_dir: 'data/logs/'
+
+# Model Parameters
+model:
+  hidden_layers: [64, 32]
+  learning_rate: 0.001
+  sigma: 1.0
+  batch_size: 32
+  epochs: 50
+
+# Features
+features:
+  text_features:
+    enabled: true
+    weights:
+      bm25: 0.3
+      tfidf: 0.2
+      title_match: 0.3
+      content_match: 0.2
+  quality_features:
+    enabled: true
+    weights:
+      length: 0.1
+      freshness: 0.3
+      url_depth: 0.05
+  popularity_features:
+    enabled: true
+    weights:
+      views: 0.2
+      clicks: 0.3
+      ctr: 0.5
+
+# Search Engine
+search:
+  max_initial_results: 100
+  default_results_count: 10
+  min_score_threshold: 0.01
+
+# API Server
+api:
+  host: '0.0.0.0'
+  port: 8000
+  debug: false
+  cors_origins: ['*']
+  rate_limit: 100  # requests per minute
